@@ -1,0 +1,10 @@
+type PubM {
+  login (username: ID!, password: String!): User!
+  signup (
+    username: ID!,
+    password: String!,
+    email: String!,
+    firstName: String,
+    lastName: String
+  ): Error
+}
