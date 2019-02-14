@@ -11,6 +11,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
+	"github.com/hiroaki-yamamoto/go-gql-sample/backend/models"
 	"github.com/vektah/gqlparser"
 	"github.com/vektah/gqlparser/ast"
 )
@@ -63,8 +64,8 @@ type ComplexityRoot struct {
 }
 
 type PubMResolver interface {
-	Login(ctx context.Context, username string, password string) (User, error)
-	Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (*Error, error)
+	Login(ctx context.Context, username string, password string) (models.User, error)
+	Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (*models.Error, error)
 }
 type PubQResolver interface {
 	Country(ctx context.Context) ([]*string, error)
@@ -342,7 +343,7 @@ type executionContext struct {
 var errorImplementors = []string{"Error"}
 
 // nolint: gocyclo, errcheck, gas, goconst
-func (ec *executionContext) _Error(ctx context.Context, sel ast.SelectionSet, obj *Error) graphql.Marshaler {
+func (ec *executionContext) _Error(ctx context.Context, sel ast.SelectionSet, obj *models.Error) graphql.Marshaler {
 	fields := graphql.CollectFields(ctx, sel, errorImplementors)
 
 	out := graphql.NewOrderedMap(len(fields))
@@ -372,7 +373,7 @@ func (ec *executionContext) _Error(ctx context.Context, sel ast.SelectionSet, ob
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Error_field(ctx context.Context, field graphql.CollectedField, obj *Error) graphql.Marshaler {
+func (ec *executionContext) _Error_field(ctx context.Context, field graphql.CollectedField, obj *models.Error) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -399,7 +400,7 @@ func (ec *executionContext) _Error_field(ctx context.Context, field graphql.Coll
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Error_messages(ctx context.Context, field graphql.CollectedField, obj *Error) graphql.Marshaler {
+func (ec *executionContext) _Error_messages(ctx context.Context, field graphql.CollectedField, obj *models.Error) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -494,7 +495,7 @@ func (ec *executionContext) _PubM_login(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(User)
+	res := resTmp.(models.User)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
@@ -525,7 +526,7 @@ func (ec *executionContext) _PubM_signup(ctx context.Context, field graphql.Coll
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*Error)
+	res := resTmp.(*models.Error)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
@@ -686,7 +687,7 @@ func (ec *executionContext) _PubQ___schema(ctx context.Context, field graphql.Co
 var userImplementors = []string{"User"}
 
 // nolint: gocyclo, errcheck, gas, goconst
-func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *User) graphql.Marshaler {
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *models.User) graphql.Marshaler {
 	fields := graphql.CollectFields(ctx, sel, userImplementors)
 
 	out := graphql.NewOrderedMap(len(fields))
@@ -728,7 +729,7 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
+func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -755,7 +756,7 @@ func (ec *executionContext) _User_username(ctx context.Context, field graphql.Co
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
+func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -782,7 +783,7 @@ func (ec *executionContext) _User_email(ctx context.Context, field graphql.Colle
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_password(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
+func (ec *executionContext) _User_password(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -809,7 +810,7 @@ func (ec *executionContext) _User_password(ctx context.Context, field graphql.Co
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
+func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -837,7 +838,7 @@ func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.C
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_lastName(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
+func (ec *executionContext) _User_lastName(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
