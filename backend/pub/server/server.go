@@ -7,9 +7,8 @@ import (
 
 	"github.com/99designs/gqlgen/handler"
 	"github.com/hiroaki-yamamoto/go-gql-sample/backend/pub"
-
 	"github.com/jinzhu/gorm"
-	// _ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 const defaultPort = "8080"

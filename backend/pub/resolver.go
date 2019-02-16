@@ -4,9 +4,11 @@ import (
 	"context"
 
 	"github.com/hiroaki-yamamoto/go-gql-sample/backend/models"
+	"github.com/jinzhu/gorm"
 )
 
 type Resolver struct {
+	db *gorm.DB
 }
 
 func (r *Resolver) PubM() PubMResolver {
