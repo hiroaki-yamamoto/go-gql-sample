@@ -2,9 +2,12 @@ package pub
 
 import (
 	"context"
+
+	"github.com/hiroaki-yamamoto/go-gql-sample/backend/models"
 )
 
-type Resolver struct{}
+type Resolver struct {
+}
 
 func (r *Resolver) PubM() PubMResolver {
 	return &pubMResolver{r}
@@ -15,10 +18,10 @@ func (r *Resolver) PubQ() PubQResolver {
 
 type pubMResolver struct{ *Resolver }
 
-func (r *pubMResolver) Login(ctx context.Context, username string, password string) (User, error) {
+func (r *pubMResolver) Login(ctx context.Context, username string, password string) (models.User, error) {
 	panic("not implemented")
 }
-func (r *pubMResolver) Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (*Error, error) {
+func (r *pubMResolver) Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (*models.Error, error) {
 	panic("not implemented")
 }
 

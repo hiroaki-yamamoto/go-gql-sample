@@ -13,3 +13,6 @@
 
 # Omit dependencies directories
 vendor
+
+# Omit database data
+*.db
