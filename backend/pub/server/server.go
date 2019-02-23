@@ -15,6 +15,9 @@ const defaultPort = "8080"
 
 func main() {
 	db, err := gorm.Open("sqlite3", "test.db")
+  if err != nil {
+    panic(err)
+  }
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -22,9 +25,7 @@ func main() {
 
 	http.Handle("/", handler.Playground("GraphQL playground", "/query"))
 	http.Handle("/query", handler.GraphQL(pub.NewExecutableSchema(
-		pub.Config{Resolvers: &pub.Resolver{
-			db: &db,
-		}}),
+		pub.Config{Resolvers: &pub.Resolver{ Db: db }}),
 	))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)

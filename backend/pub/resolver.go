@@ -8,7 +8,7 @@ import (
 )
 
 type Resolver struct {
-	db *gorm.DB
+	Db *gorm.DB
 }
 
 func (r *Resolver) PubM() PubMResolver {
