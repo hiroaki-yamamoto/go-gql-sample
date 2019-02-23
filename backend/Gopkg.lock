@@ -28,6 +28,14 @@
   version = "v1.0.1"
 
 [[projects]]
+  digest = "1:cb07c3f044a051a6e3c984dc6f09ba5cb7d51d74fb9a0f15db294561c98740f8"
+  name = "github.com/gbrlsnchs/jwt"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "808efa0714baff8c25cc65ef8681966740beb9f9"
+  version = "v2.0.0"
+
+[[projects]]
   digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
   name = "github.com/gorilla/websocket"
   packages = ["."]
@@ -144,6 +152,7 @@
     "github.com/99designs/gqlgen/graphql",
     "github.com/99designs/gqlgen/graphql/introspection",
     "github.com/99designs/gqlgen/handler",
+    "github.com/gbrlsnchs/jwt",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/sqlite",
     "github.com/vektah/gqlparser",
