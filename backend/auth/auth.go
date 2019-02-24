@@ -53,6 +53,31 @@ func extractToken(token string) (*jwt.JWT, error) {
   return &jot, nil
 }
 
+func composeToken(username string) ([]byte, error) {
+  secret := os.Getenv("SECRET_KEY")
+  if len(secret) < 1 {
+    return nil, errors.New("No secret key specified")
+  }
+  signer := jwt.NewHS512(secret)
+  now := time.Now().UTC()
+  jot := &jwt.JWT{
+    Issuer: "go-gql-sample",
+    Subject: "identity",
+    Audience: "go-gql-example",
+    ExpirationTime: now.Add(2 * time.Hour).Unix(),
+    NotBefore: now.Unix(),
+    IssuedAt: now.Unix(),
+    ID: username,
+  }
+  jot.SetAlgorithm(signer)
+  jot.SetKeyID("identity")
+  payload, err := jwt.Marshal(jot)
+  if err != nil {
+    return nil, err
+  }
+  return signer.Sign(payload)
+}
+
 // AuthenticationMiddleware is Middleware for authentication.
 func AuthenticationMiddleware(db *gorm.DB) func(http.Handler) http.Handler {
   return func(next http.Handler) http.Handler {
@@ -87,4 +112,17 @@ func AuthenticationMiddleware(db *gorm.DB) func(http.Handler) http.Handler {
 func GetUser(ctx context.Context) *models.User {
   raw, _ := ctx.Value(userCtxKey).(*models.User)
   return raw
+}
+
+// SetUser set user session to cokkie named "session"
+func SetUser(w http.ResponseWriter, user *models.User) {
+  tok, err := composeToken(user.Username)
+  if err != nil {
+    log.Print(err)
+    return
+  }
+  http.SetCookie(w, &http.Cookie{
+    Name: "session",
+    Value: string(tok),
+  })
 }
