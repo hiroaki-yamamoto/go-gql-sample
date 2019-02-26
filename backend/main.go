@@ -13,6 +13,7 @@ import (
 
   "github.com/hiroaki-yamamoto/go-gql-sample/backend/pub"
   "github.com/hiroaki-yamamoto/go-gql-sample/backend/auth"
+  mid "github.com/hiroaki-yamamoto/go-gql-sample/backend/middleware"
 )
 
 const defaultPort = "8080"
@@ -33,6 +34,7 @@ func main() {
   router.Use(middleware.Logger)
   router.Use(middleware.Recoverer)
   router.Use(auth.AuthenticationMiddleware(db))
+  router.Use(mid.ContextReqRespMiddleware)
 
 	router.Handle("/", handler.Playground("GraphQL playground", "/query"))
 	router.Handle("/query", handler.GraphQL(pub.NewExecutableSchema(

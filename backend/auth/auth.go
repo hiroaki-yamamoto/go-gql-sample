@@ -14,9 +14,7 @@ import (
   "github.com/jinzhu/gorm"
 )
 
-import (
-  "github.com/hiroaki-yamamoto/go-gql-sample/backend/models"
-)
+import "github.com/hiroaki-yamamoto/go-gql-sample/backend/models"
 
 var userCtxKey = &contextKey{"user"}
 
@@ -94,6 +92,11 @@ func AuthenticationMiddleware(db *gorm.DB) func(http.Handler) http.Handler {
         log.Print(error)
         return
       }
+      if len(token.ID) < 1 {
+        next.ServeHTTP(w, r)
+        log.Print("Not authenticated user")
+        return
+      }
       var user models.User
       err = db.Where(&models.User{Username: token.ID}).First(&user).Error
       if err != nil {
@@ -114,9 +117,22 @@ func GetUser(ctx context.Context) *models.User {
   return raw
 }
 
-// SetUser set user session to cokkie named "session"
-func SetUser(w http.ResponseWriter, user *models.User) {
+// Login sets user session to cookie named "session"
+func Login(w http.ResponseWriter, user *models.User) {
   tok, err := composeToken(user.Username)
+  if err != nil {
+    log.Print(err)
+    return
+  }
+  http.SetCookie(w, &http.Cookie{
+    Name: "session",
+    Value: string(tok),
+  })
+}
+
+// Logout sets empty username to cookie named "session"
+func Logout(w http.ResponseWriter, user *models.User) {
+  tok, err := composeToken("")
   if err != nil {
     log.Print(err)
     return
