@@ -6,12 +6,12 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"sync"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/hiroaki-yamamoto/go-gql-sample/backend/models"
 	"github.com/vektah/gqlparser"
 	"github.com/vektah/gqlparser/ast"
 )
@@ -45,6 +45,10 @@ type ComplexityRoot struct {
 		Messages func(childComplexity int) int
 	}
 
+	ErrorList struct {
+		Errors func(childComplexity int) int
+	}
+
 	PubM struct {
 		Login  func(childComplexity int, username string, password string) int
 		Signup func(childComplexity int, username string, password string, email string, firstName *string, lastName *string) int
@@ -64,8 +68,8 @@ type ComplexityRoot struct {
 }
 
 type PubMResolver interface {
-	Login(ctx context.Context, username string, password string) (models.User, error)
-	Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (*models.Error, error)
+	Login(ctx context.Context, username string, password string) (UserAndError, error)
+	Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (UserAndError, error)
 }
 type PubQResolver interface {
 	Country(ctx context.Context) ([]*string, error)
@@ -228,6 +232,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Error.Messages(childComplexity), true
 
+	case "ErrorList.errors":
+		if e.complexity.ErrorList.Errors == nil {
+			break
+		}
+
+		return e.complexity.ErrorList.Errors(childComplexity), true
+
 	case "PubM.login":
 		if e.complexity.PubM.Login == nil {
 			break
@@ -343,7 +354,7 @@ type executionContext struct {
 var errorImplementors = []string{"Error"}
 
 // nolint: gocyclo, errcheck, gas, goconst
-func (ec *executionContext) _Error(ctx context.Context, sel ast.SelectionSet, obj *models.Error) graphql.Marshaler {
+func (ec *executionContext) _Error(ctx context.Context, sel ast.SelectionSet, obj *Error) graphql.Marshaler {
 	fields := graphql.CollectFields(ctx, sel, errorImplementors)
 
 	out := graphql.NewOrderedMap(len(fields))
@@ -373,7 +384,7 @@ func (ec *executionContext) _Error(ctx context.Context, sel ast.SelectionSet, ob
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Error_field(ctx context.Context, field graphql.CollectedField, obj *models.Error) graphql.Marshaler {
+func (ec *executionContext) _Error_field(ctx context.Context, field graphql.CollectedField, obj *Error) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -400,7 +411,7 @@ func (ec *executionContext) _Error_field(ctx context.Context, field graphql.Coll
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Error_messages(ctx context.Context, field graphql.CollectedField, obj *models.Error) graphql.Marshaler {
+func (ec *executionContext) _Error_messages(ctx context.Context, field graphql.CollectedField, obj *Error) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -429,6 +440,94 @@ func (ec *executionContext) _Error_messages(ctx context.Context, field graphql.C
 		}()
 	}
 
+	return arr1
+}
+
+var errorListImplementors = []string{"ErrorList"}
+
+// nolint: gocyclo, errcheck, gas, goconst
+func (ec *executionContext) _ErrorList(ctx context.Context, sel ast.SelectionSet, obj *ErrorList) graphql.Marshaler {
+	fields := graphql.CollectFields(ctx, sel, errorListImplementors)
+
+	out := graphql.NewOrderedMap(len(fields))
+	invalid := false
+	for i, field := range fields {
+		out.Keys[i] = field.Alias
+
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ErrorList")
+		case "errors":
+			out.Values[i] = ec._ErrorList_errors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+
+	if invalid {
+		return graphql.Null
+	}
+	return out
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _ErrorList_errors(ctx context.Context, field graphql.CollectedField, obj *ErrorList) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "ErrorList",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Errors, nil
+	})
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*Error)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	arr1 := make(graphql.Array, len(res))
+	var wg sync.WaitGroup
+
+	isLen1 := len(res) == 1
+	if !isLen1 {
+		wg.Add(len(res))
+	}
+
+	for idx1 := range res {
+		idx1 := idx1
+		rctx := &graphql.ResolverContext{
+			Index:  &idx1,
+			Result: res[idx1],
+		}
+		ctx := graphql.WithResolverContext(ctx, rctx)
+		f := func(idx1 int) {
+			if !isLen1 {
+				defer wg.Done()
+			}
+			arr1[idx1] = func() graphql.Marshaler {
+
+				if res[idx1] == nil {
+					return graphql.Null
+				}
+
+				return ec._Error(ctx, field.Selections, res[idx1])
+			}()
+		}
+		if isLen1 {
+			f(idx1)
+		} else {
+			go f(idx1)
+		}
+
+	}
+	wg.Wait()
 	return arr1
 }
 
@@ -495,11 +594,11 @@ func (ec *executionContext) _PubM_login(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.User)
+	res := resTmp.(UserAndError)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
-	return ec._User(ctx, field.Selections, &res)
+	return ec._UserAndError(ctx, field.Selections, &res)
 }
 
 // nolint: vetshadow
@@ -526,15 +625,11 @@ func (ec *executionContext) _PubM_signup(ctx context.Context, field graphql.Coll
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.Error)
+	res := resTmp.(UserAndError)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
-	if res == nil {
-		return graphql.Null
-	}
-
-	return ec._Error(ctx, field.Selections, res)
+	return ec._UserAndError(ctx, field.Selections, &res)
 }
 
 var pubQImplementors = []string{"PubQ"}
@@ -687,7 +782,7 @@ func (ec *executionContext) _PubQ___schema(ctx context.Context, field graphql.Co
 var userImplementors = []string{"User"}
 
 // nolint: gocyclo, errcheck, gas, goconst
-func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *models.User) graphql.Marshaler {
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *User) graphql.Marshaler {
 	fields := graphql.CollectFields(ctx, sel, userImplementors)
 
 	out := graphql.NewOrderedMap(len(fields))
@@ -729,7 +824,7 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
+func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -756,7 +851,7 @@ func (ec *executionContext) _User_username(ctx context.Context, field graphql.Co
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
+func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -783,7 +878,7 @@ func (ec *executionContext) _User_email(ctx context.Context, field graphql.Colle
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_password(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
+func (ec *executionContext) _User_password(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -810,7 +905,7 @@ func (ec *executionContext) _User_password(ctx context.Context, field graphql.Co
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
+func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -838,7 +933,7 @@ func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.C
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _User_lastName(ctx context.Context, field graphql.CollectedField, obj *models.User) graphql.Marshaler {
+func (ec *executionContext) _User_lastName(ctx context.Context, field graphql.CollectedField, obj *User) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -2310,6 +2405,23 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 	return ec.___Type(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UserAndError(ctx context.Context, sel ast.SelectionSet, obj *UserAndError) graphql.Marshaler {
+	switch obj := (*obj).(type) {
+	case nil:
+		return graphql.Null
+	case User:
+		return ec._User(ctx, sel, &obj)
+	case *User:
+		return ec._User(ctx, sel, obj)
+	case ErrorList:
+		return ec._ErrorList(ctx, sel, &obj)
+	case *ErrorList:
+		return ec._ErrorList(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
 func (ec *executionContext) FieldMiddleware(ctx context.Context, obj interface{}, next graphql.Resolver) (ret interface{}) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2344,6 +2456,12 @@ var parsedSchema = gqlparser.MustLoadSchema(
   field: String!
   messages: [String!]
 }
+
+type ErrorList {
+  errors: [Error]
+}
+`},
+	&ast.Source{Name: "../schemata/common/unions.gql", Input: `union UserAndError = User | ErrorList
 `},
 	&ast.Source{Name: "../schemata/common/user.gql", Input: `type User {
   username: ID!
@@ -2354,14 +2472,14 @@ var parsedSchema = gqlparser.MustLoadSchema(
 }
 `},
 	&ast.Source{Name: "../schemata/pub/mut.gql", Input: `type PubM {
-  login (username: ID!, password: String!): User!
+  login (username: ID!, password: String!): UserAndError!
   signup (
     username: ID!,
     password: String!,
     email: String!,
     firstName: String,
     lastName: String
-  ): Error
+  ): UserAndError
 }
 `},
 	&ast.Source{Name: "../schemata/pub/query.gql", Input: `type PubQ {

@@ -126,6 +126,25 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:d4df67cef5e20015feb306724296fde6155f2451e87ec3152d8d4963bf841c06"
+  name = "golang.org/x/crypto"
+  packages = [
+    "argon2",
+    "blake2b",
+  ]
+  pruneopts = "UT"
+  revision = "7f87c0fbb88b590338857bcb720678c2583d4dea"
+
+[[projects]]
+  branch = "master"
+  digest = "1:f3f79696c064bff17314b6180110357383f81d4d633c5e1ae2f7e0b461cbb779"
+  name = "golang.org/x/sys"
+  packages = ["cpu"]
+  pruneopts = "UT"
+  revision = "775f8194d0f9e65c46913c7be783d3d95a29333c"
+
+[[projects]]
+  branch = "master"
   digest = "1:7eee604fd833c4346b8708d184f121dc52d652cc588c18683e09b3f14c83eca4"
   name = "golang.org/x/tools"
   packages = [
@@ -170,6 +189,7 @@
     "github.com/jinzhu/gorm/dialects/sqlite",
     "github.com/vektah/gqlparser",
     "github.com/vektah/gqlparser/ast",
+    "golang.org/x/crypto/argon2",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -2,3 +2,7 @@ type Error {
   field: String!
   messages: [String!]
 }
+
+type ErrorList {
+  errors: [Error]
+}

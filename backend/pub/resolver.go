@@ -20,11 +20,28 @@ func (r *Resolver) PubQ() PubQResolver {
 
 type pubMResolver struct{ *Resolver }
 
-func (r *pubMResolver) Login(ctx context.Context, username string, password string) (models.User, error) {
+func (r *pubMResolver) Login(ctx context.Context, username string, password string) (UserAndError, error) {
 	panic("not implemented")
 }
-func (r *pubMResolver) Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (*models.Error, error) {
-	panic("not implemented")
+func (r *pubMResolver) Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (UserAndError, error) {
+  user := models.User{
+    Username: username,
+    Password: password,
+    Email: email,
+    FirstName: firstName,
+    LastName: lastName,
+  }
+  (&user).Create(r.Db)
+
+  // Do you have any idea to assign fields from models.User in smart way??
+  // If you have, send me PR.
+  return User{
+    Username: user.Username,
+    Password: user.Password,
+    Email: user.Email,
+    FirstName: user.FirstName,
+    LastName: user.LastName,
+  }, nil
 }
 
 type pubQResolver struct{ *Resolver }
