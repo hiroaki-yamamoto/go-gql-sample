@@ -118,26 +118,26 @@ func GetUser(ctx context.Context) *models.User {
 }
 
 // Login sets user session to cookie named "session"
-func Login(w http.ResponseWriter, user *models.User) {
+func Login(w *http.ResponseWriter, user *models.User) {
   tok, err := composeToken(user.Username)
   if err != nil {
     log.Print(err)
     return
   }
-  http.SetCookie(w, &http.Cookie{
+  http.SetCookie(*w, &http.Cookie{
     Name: "session",
     Value: string(tok),
   })
 }
 
 // Logout sets empty username to cookie named "session"
-func Logout(w http.ResponseWriter, user *models.User) {
+func Logout(w *http.ResponseWriter, user *models.User) {
   tok, err := composeToken("")
   if err != nil {
     log.Print(err)
     return
   }
-  http.SetCookie(w, &http.Cookie{
+  http.SetCookie(*w, &http.Cookie{
     Name: "session",
     Value: string(tok),
   })

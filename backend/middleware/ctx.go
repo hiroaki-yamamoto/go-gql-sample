@@ -18,7 +18,7 @@ var ResponseKey = &ctxKey{"response"}
 func ContextReqRespMiddleware(next http.Handler) http.Handler {
   return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
     ctx := context.WithValue(req.Context(), RequestKey, req)
-    ctx = context.WithValue(ctx, ResponseKey, resp)
+    ctx = context.WithValue(ctx, ResponseKey, &resp)
     next.ServeHTTP(resp, req.WithContext(ctx))
   })
 }
