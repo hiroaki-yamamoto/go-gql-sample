@@ -1,4 +1,3 @@
 schema {
   query: PrvQuery
-  mutation: PrvMut
 }

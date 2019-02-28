@@ -2,11 +2,9 @@ package pub
 
 import (
 	"context"
-  "net/http"
 
 	"github.com/hiroaki-yamamoto/go-gql-sample/backend/models"
   "github.com/hiroaki-yamamoto/go-gql-sample/backend/auth"
-  "github.com/hiroaki-yamamoto/go-gql-sample/backend/middleware"
 	"github.com/jinzhu/gorm"
 )
 
@@ -23,18 +21,11 @@ func (r *Resolver) PubQ() PubQResolver {
 
 type pubMResolver struct{ *Resolver }
 
-func (r *pubMResolver) Login(ctx context.Context, username string, password string) (UserAndError, error) {
+func (r *pubMResolver) Login(ctx context.Context, username string, password string) (TokenAndError, error) {
 	user := &models.User{}
-  resp, ok := ctx.Value(middleware.ResponseKey).(*http.ResponseWriter)
-  if !ok {
-    panic(
-      "The response couldn't be loaded. " +
-      "Check whether ContextReqRespMiddleware is loaded",
-    )
-  }
   user.Authenticate(r.Db, username, password)
-  auth.Login(resp, user)
-  return transferUser(user), nil
+  token, err := auth.Login(user)
+  return Token{token}, err
 }
 func (r *pubMResolver) Signup(ctx context.Context, username string, password string, email string, firstName *string, lastName *string) (UserAndError, error) {
   user := &models.User{

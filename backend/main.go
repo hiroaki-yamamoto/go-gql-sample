@@ -12,8 +12,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
   "github.com/hiroaki-yamamoto/go-gql-sample/backend/pub"
+  "github.com/hiroaki-yamamoto/go-gql-sample/backend/prv"
   "github.com/hiroaki-yamamoto/go-gql-sample/backend/auth"
-  mid "github.com/hiroaki-yamamoto/go-gql-sample/backend/middleware"
 )
 
 const defaultPort = "8080"
@@ -34,11 +34,13 @@ func main() {
   router.Use(middleware.Logger)
   router.Use(middleware.Recoverer)
   router.Use(auth.AuthenticationMiddleware(db))
-  router.Use(mid.ContextReqRespMiddleware)
 
-	router.Handle("/", handler.Playground("GraphQL playground", "/query"))
-	router.Handle("/query", handler.GraphQL(pub.NewExecutableSchema(
+	router.Handle("/", handler.Playground("GraphQL playground", "/pub"))
+	router.Handle("/pub", handler.GraphQL(pub.NewExecutableSchema(
 		pub.Config{Resolvers: &pub.Resolver{ Db: db }}),
+	))
+  router.Handle("/prv", handler.GraphQL(prv.NewExecutableSchema(
+		prv.Config{Resolvers: &prv.Resolver{}}),
 	))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)

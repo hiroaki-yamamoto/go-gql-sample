@@ -80,16 +80,11 @@ func composeToken(username string) ([]byte, error) {
 func AuthenticationMiddleware(db *gorm.DB) func(http.Handler) http.Handler {
   return func(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-      c, err := r.Cookie("session")
-      if err != nil || c == nil {
+      c := r.Header.Get("Authorization")
+      token, err := extractToken(c)
+      if err != nil {
         next.ServeHTTP(w, r)
         log.Print(err)
-        return
-      }
-      token, error := extractToken(c.Value)
-      if error != nil {
-        next.ServeHTTP(w, r)
-        log.Print(error)
         return
       }
       if len(token.ID) < 1 {
@@ -101,7 +96,7 @@ func AuthenticationMiddleware(db *gorm.DB) func(http.Handler) http.Handler {
       err = db.Where(&models.User{Username: token.ID}).First(&user).Error
       if err != nil {
         next.ServeHTTP(w, r)
-        log.Print(error)
+        log.Print(err)
         return
       }
       ctx := context.WithValue(r.Context(), userCtxKey, user)
@@ -112,33 +107,13 @@ func AuthenticationMiddleware(db *gorm.DB) func(http.Handler) http.Handler {
 }
 
 // GetUser tries to retrieve user instance from current context.
-func GetUser(ctx context.Context) *models.User {
-  raw, _ := ctx.Value(userCtxKey).(*models.User)
+func GetUser(ctx context.Context) models.User {
+  raw, _ := ctx.Value(userCtxKey).(models.User)
   return raw
 }
 
-// Login sets user session to cookie named "session"
-func Login(w *http.ResponseWriter, user *models.User) {
+// Login returns authorization token corresponding to user to login.
+func Login(user *models.User) (string, error) {
   tok, err := composeToken(user.Username)
-  if err != nil {
-    log.Print(err)
-    return
-  }
-  http.SetCookie(*w, &http.Cookie{
-    Name: "session",
-    Value: string(tok),
-  })
-}
-
-// Logout sets empty username to cookie named "session"
-func Logout(w *http.ResponseWriter, user *models.User) {
-  tok, err := composeToken("")
-  if err != nil {
-    log.Print(err)
-    return
-  }
-  http.SetCookie(*w, &http.Cookie{
-    Name: "session",
-    Value: string(tok),
-  })
+  return string(tok), err
 }

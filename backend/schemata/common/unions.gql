@@ -1,1 +1,2 @@
 union UserAndError = User | ErrorList
+union TokenAndError = Token | ErrorList
