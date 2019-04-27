@@ -46,4 +46,3 @@ services:
       - .:/go/src/github.com/hiroaki-yamamoto/go-gql-sample
     depends_on:
       - db
-      - prisma
