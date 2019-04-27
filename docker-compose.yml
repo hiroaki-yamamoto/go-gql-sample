@@ -1,0 +1,49 @@
+version: '3'
+
+# CAUTION: DO NOT USE THIS FOR PRODUCTION. THIS IS DESIGNED FOR DEVELOPMENT!!
+
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: go-sample
+      POSTGRES_USER: go-sample
+      POSTGRES_DB: go-sample
+    command:
+      - postgres
+      - -cfsync=off
+      - -cfull_page_writes=off
+      - -csynchronous_commit=off
+      - -crandom_page_cost=1.1
+  prisma:
+    image: prismagraphql/prisma:1.30.2
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "4466:4466"
+    environment:
+      PRISMA_CONFIG: |
+        managementApiSecret: "testSecret"
+        port: 4466
+        databases:
+          default:
+            connector: postgres
+            host: db
+            port: 5432
+            user: go-sample
+            password: go-sample
+  backend:
+    build:
+      context: ./
+      dockerfile: backend.dockerfile
+    command: ['./run.sh']
+    stop_signal: SIGINT
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/go/src/github.com/hiroaki-yamamoto/go-gql-sample
+    depends_on:
+      - db
+      - prisma
