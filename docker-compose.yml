@@ -17,7 +17,7 @@ services:
       - -csynchronous_commit=off
       - -crandom_page_cost=1.1
   prisma:
-    image: prismagraphql/prisma:1.30.2
+    image: prismagraphql/prisma:1.31
     restart: always
     depends_on:
       - db
