@@ -1,0 +1,389 @@
+type AggregateToken {
+  count: Int!
+}
+
+type AggregateUser {
+  count: Int!
+}
+
+type BatchPayload {
+  count: Long!
+}
+
+scalar Long
+
+type Mutation {
+  createToken(data: TokenCreateInput!): Token!
+  updateToken(data: TokenUpdateInput!, where: TokenWhereUniqueInput!): Token
+  updateManyTokens(data: TokenUpdateManyMutationInput!, where: TokenWhereInput): BatchPayload!
+  upsertToken(where: TokenWhereUniqueInput!, create: TokenCreateInput!, update: TokenUpdateInput!): Token!
+  deleteToken(where: TokenWhereUniqueInput!): Token
+  deleteManyTokens(where: TokenWhereInput): BatchPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  token(where: TokenWhereUniqueInput!): Token
+  tokens(where: TokenWhereInput, orderBy: TokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Token]!
+  tokensConnection(where: TokenWhereInput, orderBy: TokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TokenConnection!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  node(id: ID!): Node
+}
+
+type Subscription {
+  token(where: TokenSubscriptionWhereInput): TokenSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+}
+
+type Token {
+  id: ID!
+  user: User!
+  type: TokenType!
+}
+
+type TokenConnection {
+  pageInfo: PageInfo!
+  edges: [TokenEdge]!
+  aggregate: AggregateToken!
+}
+
+input TokenCreateInput {
+  id: ID
+  user: UserCreateOneWithoutTokensInput!
+  type: TokenType!
+}
+
+input TokenCreateManyWithoutUserInput {
+  create: [TokenCreateWithoutUserInput!]
+  connect: [TokenWhereUniqueInput!]
+}
+
+input TokenCreateWithoutUserInput {
+  id: ID
+  type: TokenType!
+}
+
+type TokenEdge {
+  node: Token!
+  cursor: String!
+}
+
+enum TokenOrderByInput {
+  id_ASC
+  id_DESC
+  type_ASC
+  type_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type TokenPreviousValues {
+  id: ID!
+  type: TokenType!
+}
+
+input TokenScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  type: TokenType
+  type_not: TokenType
+  type_in: [TokenType!]
+  type_not_in: [TokenType!]
+  AND: [TokenScalarWhereInput!]
+  OR: [TokenScalarWhereInput!]
+  NOT: [TokenScalarWhereInput!]
+}
+
+type TokenSubscriptionPayload {
+  mutation: MutationType!
+  node: Token
+  updatedFields: [String!]
+  previousValues: TokenPreviousValues
+}
+
+input TokenSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: TokenWhereInput
+  AND: [TokenSubscriptionWhereInput!]
+  OR: [TokenSubscriptionWhereInput!]
+  NOT: [TokenSubscriptionWhereInput!]
+}
+
+enum TokenType {
+  Activation
+  ResetPW
+  ChangeEmail
+  ChangePW
+}
+
+input TokenUpdateInput {
+  user: UserUpdateOneRequiredWithoutTokensInput
+  type: TokenType
+}
+
+input TokenUpdateManyDataInput {
+  type: TokenType
+}
+
+input TokenUpdateManyMutationInput {
+  type: TokenType
+}
+
+input TokenUpdateManyWithoutUserInput {
+  create: [TokenCreateWithoutUserInput!]
+  delete: [TokenWhereUniqueInput!]
+  connect: [TokenWhereUniqueInput!]
+  set: [TokenWhereUniqueInput!]
+  disconnect: [TokenWhereUniqueInput!]
+  update: [TokenUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [TokenUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [TokenScalarWhereInput!]
+  updateMany: [TokenUpdateManyWithWhereNestedInput!]
+}
+
+input TokenUpdateManyWithWhereNestedInput {
+  where: TokenScalarWhereInput!
+  data: TokenUpdateManyDataInput!
+}
+
+input TokenUpdateWithoutUserDataInput {
+  type: TokenType
+}
+
+input TokenUpdateWithWhereUniqueWithoutUserInput {
+  where: TokenWhereUniqueInput!
+  data: TokenUpdateWithoutUserDataInput!
+}
+
+input TokenUpsertWithWhereUniqueWithoutUserInput {
+  where: TokenWhereUniqueInput!
+  update: TokenUpdateWithoutUserDataInput!
+  create: TokenCreateWithoutUserInput!
+}
+
+input TokenWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  user: UserWhereInput
+  type: TokenType
+  type_not: TokenType
+  type_in: [TokenType!]
+  type_not_in: [TokenType!]
+  AND: [TokenWhereInput!]
+  OR: [TokenWhereInput!]
+  NOT: [TokenWhereInput!]
+}
+
+input TokenWhereUniqueInput {
+  id: ID
+}
+
+type User {
+  id: ID!
+  username: String!
+  password: String!
+  tokens(where: TokenWhereInput, orderBy: TokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Token!]
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  id: ID
+  username: String!
+  password: String!
+  tokens: TokenCreateManyWithoutUserInput
+}
+
+input UserCreateOneWithoutTokensInput {
+  create: UserCreateWithoutTokensInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutTokensInput {
+  id: ID
+  username: String!
+  password: String!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  username_ASC
+  username_DESC
+  password_ASC
+  password_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type UserPreviousValues {
+  id: ID!
+  username: String!
+  password: String!
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+  AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
+}
+
+input UserUpdateInput {
+  username: String
+  password: String
+  tokens: TokenUpdateManyWithoutUserInput
+}
+
+input UserUpdateManyMutationInput {
+  username: String
+  password: String
+}
+
+input UserUpdateOneRequiredWithoutTokensInput {
+  create: UserCreateWithoutTokensInput
+  update: UserUpdateWithoutTokensDataInput
+  upsert: UserUpsertWithoutTokensInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutTokensDataInput {
+  username: String
+  password: String
+}
+
+input UserUpsertWithoutTokensInput {
+  update: UserUpdateWithoutTokensDataInput!
+  create: UserCreateWithoutTokensInput!
+}
+
+input UserWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  username: String
+  username_not: String
+  username_in: [String!]
+  username_not_in: [String!]
+  username_lt: String
+  username_lte: String
+  username_gt: String
+  username_gte: String
+  username_contains: String
+  username_not_contains: String
+  username_starts_with: String
+  username_not_starts_with: String
+  username_ends_with: String
+  username_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
+  tokens_every: TokenWhereInput
+  tokens_some: TokenWhereInput
+  tokens_none: TokenWhereInput
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+}
+
+input UserWhereUniqueInput {
+  id: ID
+  username: String
+}

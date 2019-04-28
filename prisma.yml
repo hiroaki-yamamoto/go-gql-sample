@@ -1,2 +1,10 @@
 endpoint: http://localhost:4466
 datamodel: datamodel.prisma
+generate:
+  - generator: go-client
+    output: ./backend/prisma
+  - generator: graphql-schema
+    output: ./backend/schemata/generated.graphql
+hooks:
+  post-deploy:
+    - prisma generate
