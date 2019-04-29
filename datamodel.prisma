@@ -1,17 +1,5 @@
-enum TokenType {
-  Activation
-  ResetPW
-  ChangeEmail
-  ChangePW
-}
-type Token {
-  id: ID! @unique @id
-  user: User! @relation(name: "UserTokens" onDelete: CASCADE)
-  type: TokenType!
-}
 type User {
   id: ID! @unique @id
   username: String! @unique
   password: String!
-  tokens: [Token!] @relation(name: "UserTokens")
 }

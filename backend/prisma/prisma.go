@@ -62,65 +62,6 @@ func (client *Client) GraphQL(ctx context.Context, query string, variables map[s
 var DefaultEndpoint = "http://localhost:4466"
 var Secret = ""
 
-func (client *Client) Token(params TokenWhereUniqueInput) *TokenExec {
-	ret := client.Client.GetOne(
-		nil,
-		params,
-		[2]string{"TokenWhereUniqueInput!", "Token"},
-		"token",
-		[]string{"id", "type"})
-
-	return &TokenExec{ret}
-}
-
-type TokensParams struct {
-	Where   *TokenWhereInput   `json:"where,omitempty"`
-	OrderBy *TokenOrderByInput `json:"orderBy,omitempty"`
-	Skip    *int32             `json:"skip,omitempty"`
-	After   *string            `json:"after,omitempty"`
-	Before  *string            `json:"before,omitempty"`
-	First   *int32             `json:"first,omitempty"`
-	Last    *int32             `json:"last,omitempty"`
-}
-
-func (client *Client) Tokens(params *TokensParams) *TokenExecArray {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"TokenWhereInput", "TokenOrderByInput", "Token"},
-		"tokens",
-		[]string{"id", "type"})
-
-	return &TokenExecArray{ret}
-}
-
-type TokensConnectionParams struct {
-	Where   *TokenWhereInput   `json:"where,omitempty"`
-	OrderBy *TokenOrderByInput `json:"orderBy,omitempty"`
-	Skip    *int32             `json:"skip,omitempty"`
-	After   *string            `json:"after,omitempty"`
-	Before  *string            `json:"before,omitempty"`
-	First   *int32             `json:"first,omitempty"`
-	Last    *int32             `json:"last,omitempty"`
-}
-
-func (client *Client) TokensConnection(params *TokensConnectionParams) TokenConnectionExec {
-	panic("not implemented")
-}
-
 func (client *Client) User(params UserWhereUniqueInput) *UserExec {
 	ret := client.Client.GetOne(
 		nil,
@@ -178,86 +119,6 @@ type UsersConnectionParams struct {
 
 func (client *Client) UsersConnection(params *UsersConnectionParams) UserConnectionExec {
 	panic("not implemented")
-}
-
-func (client *Client) CreateToken(params TokenCreateInput) *TokenExec {
-	ret := client.Client.Create(
-		params,
-		[2]string{"TokenCreateInput!", "Token"},
-		"createToken",
-		[]string{"id", "type"})
-
-	return &TokenExec{ret}
-}
-
-type TokenUpdateParams struct {
-	Data  TokenUpdateInput      `json:"data"`
-	Where TokenWhereUniqueInput `json:"where"`
-}
-
-func (client *Client) UpdateToken(params TokenUpdateParams) *TokenExec {
-	ret := client.Client.Update(
-		prisma.UpdateParams{
-			Data:  params.Data,
-			Where: params.Where,
-		},
-		[3]string{"TokenUpdateInput!", "TokenWhereUniqueInput!", "Token"},
-		"updateToken",
-		[]string{"id", "type"})
-
-	return &TokenExec{ret}
-}
-
-type TokenUpdateManyParams struct {
-	Data  TokenUpdateManyMutationInput `json:"data"`
-	Where *TokenWhereInput             `json:"where,omitempty"`
-}
-
-func (client *Client) UpdateManyTokens(params TokenUpdateManyParams) *BatchPayloadExec {
-	exec := client.Client.UpdateMany(
-		prisma.UpdateParams{
-			Data:  params.Data,
-			Where: params.Where,
-		},
-		[2]string{"TokenUpdateManyMutationInput!", "TokenWhereInput"},
-		"updateManyTokens")
-	return &BatchPayloadExec{exec}
-}
-
-type TokenUpsertParams struct {
-	Where  TokenWhereUniqueInput `json:"where"`
-	Create TokenCreateInput      `json:"create"`
-	Update TokenUpdateInput      `json:"update"`
-}
-
-func (client *Client) UpsertToken(params TokenUpsertParams) *TokenExec {
-	uparams := &prisma.UpsertParams{
-		Where:  params.Where,
-		Create: params.Create,
-		Update: params.Update,
-	}
-	ret := client.Client.Upsert(
-		uparams,
-		[4]string{"TokenWhereUniqueInput!", "TokenCreateInput!", "TokenUpdateInput!", "Token"},
-		"upsertToken",
-		[]string{"id", "type"})
-
-	return &TokenExec{ret}
-}
-
-func (client *Client) DeleteToken(params TokenWhereUniqueInput) *TokenExec {
-	ret := client.Client.Delete(
-		params,
-		[2]string{"TokenWhereUniqueInput!", "Token"},
-		"deleteToken",
-		[]string{"id", "type"})
-
-	return &TokenExec{ret}
-}
-
-func (client *Client) DeleteManyTokens(params *TokenWhereInput) *BatchPayloadExec {
-	exec := client.Client.DeleteMany(params, "TokenWhereInput", "deleteManyTokens")
-	return &BatchPayloadExec{exec}
 }
 
 func (client *Client) CreateUser(params UserCreateInput) *UserExec {
@@ -340,28 +201,6 @@ func (client *Client) DeleteManyUsers(params *UserWhereInput) *BatchPayloadExec 
 	return &BatchPayloadExec{exec}
 }
 
-type TokenType string
-
-const (
-	TokenTypeActivation  TokenType = "Activation"
-	TokenTypeResetPw     TokenType = "ResetPW"
-	TokenTypeChangeEmail TokenType = "ChangeEmail"
-	TokenTypeChangePw    TokenType = "ChangePW"
-)
-
-type TokenOrderByInput string
-
-const (
-	TokenOrderByInputIDAsc         TokenOrderByInput = "id_ASC"
-	TokenOrderByInputIDDesc        TokenOrderByInput = "id_DESC"
-	TokenOrderByInputTypeAsc       TokenOrderByInput = "type_ASC"
-	TokenOrderByInputTypeDesc      TokenOrderByInput = "type_DESC"
-	TokenOrderByInputCreatedAtAsc  TokenOrderByInput = "createdAt_ASC"
-	TokenOrderByInputCreatedAtDesc TokenOrderByInput = "createdAt_DESC"
-	TokenOrderByInputUpdatedAtAsc  TokenOrderByInput = "updatedAt_ASC"
-	TokenOrderByInputUpdatedAtDesc TokenOrderByInput = "updatedAt_DESC"
-)
-
 type UserOrderByInput string
 
 const (
@@ -385,33 +224,9 @@ const (
 	MutationTypeDeleted MutationType = "DELETED"
 )
 
-type TokenWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
-}
-
-type TokenWhereInput struct {
-	ID              *string           `json:"id,omitempty"`
-	IDNot           *string           `json:"id_not,omitempty"`
-	IDIn            []string          `json:"id_in,omitempty"`
-	IDNotIn         []string          `json:"id_not_in,omitempty"`
-	IDLt            *string           `json:"id_lt,omitempty"`
-	IDLte           *string           `json:"id_lte,omitempty"`
-	IDGt            *string           `json:"id_gt,omitempty"`
-	IDGte           *string           `json:"id_gte,omitempty"`
-	IDContains      *string           `json:"id_contains,omitempty"`
-	IDNotContains   *string           `json:"id_not_contains,omitempty"`
-	IDStartsWith    *string           `json:"id_starts_with,omitempty"`
-	IDNotStartsWith *string           `json:"id_not_starts_with,omitempty"`
-	IDEndsWith      *string           `json:"id_ends_with,omitempty"`
-	IDNotEndsWith   *string           `json:"id_not_ends_with,omitempty"`
-	User            *UserWhereInput   `json:"user,omitempty"`
-	Type            *TokenType        `json:"type,omitempty"`
-	TypeNot         *TokenType        `json:"type_not,omitempty"`
-	TypeIn          []TokenType       `json:"type_in,omitempty"`
-	TypeNotIn       []TokenType       `json:"type_not_in,omitempty"`
-	And             []TokenWhereInput `json:"AND,omitempty"`
-	Or              []TokenWhereInput `json:"OR,omitempty"`
-	Not             []TokenWhereInput `json:"NOT,omitempty"`
+type UserWhereUniqueInput struct {
+	ID       *string `json:"id,omitempty"`
+	Username *string `json:"username,omitempty"`
 }
 
 type UserWhereInput struct {
@@ -457,159 +272,25 @@ type UserWhereInput struct {
 	PasswordNotStartsWith *string          `json:"password_not_starts_with,omitempty"`
 	PasswordEndsWith      *string          `json:"password_ends_with,omitempty"`
 	PasswordNotEndsWith   *string          `json:"password_not_ends_with,omitempty"`
-	TokensEvery           *TokenWhereInput `json:"tokens_every,omitempty"`
-	TokensSome            *TokenWhereInput `json:"tokens_some,omitempty"`
-	TokensNone            *TokenWhereInput `json:"tokens_none,omitempty"`
 	And                   []UserWhereInput `json:"AND,omitempty"`
 	Or                    []UserWhereInput `json:"OR,omitempty"`
 	Not                   []UserWhereInput `json:"NOT,omitempty"`
 }
 
-type UserWhereUniqueInput struct {
-	ID       *string `json:"id,omitempty"`
-	Username *string `json:"username,omitempty"`
-}
-
-type TokenCreateInput struct {
-	ID   *string                         `json:"id,omitempty"`
-	User UserCreateOneWithoutTokensInput `json:"user"`
-	Type TokenType                       `json:"type"`
-}
-
-type UserCreateOneWithoutTokensInput struct {
-	Create  *UserCreateWithoutTokensInput `json:"create,omitempty"`
-	Connect *UserWhereUniqueInput         `json:"connect,omitempty"`
-}
-
-type UserCreateWithoutTokensInput struct {
+type UserCreateInput struct {
 	ID       *string `json:"id,omitempty"`
 	Username string  `json:"username"`
 	Password string  `json:"password"`
 }
 
-type TokenUpdateInput struct {
-	User *UserUpdateOneRequiredWithoutTokensInput `json:"user,omitempty"`
-	Type *TokenType                               `json:"type,omitempty"`
-}
-
-type UserUpdateOneRequiredWithoutTokensInput struct {
-	Create  *UserCreateWithoutTokensInput     `json:"create,omitempty"`
-	Update  *UserUpdateWithoutTokensDataInput `json:"update,omitempty"`
-	Upsert  *UserUpsertWithoutTokensInput     `json:"upsert,omitempty"`
-	Connect *UserWhereUniqueInput             `json:"connect,omitempty"`
-}
-
-type UserUpdateWithoutTokensDataInput struct {
+type UserUpdateInput struct {
 	Username *string `json:"username,omitempty"`
 	Password *string `json:"password,omitempty"`
-}
-
-type UserUpsertWithoutTokensInput struct {
-	Update UserUpdateWithoutTokensDataInput `json:"update"`
-	Create UserCreateWithoutTokensInput     `json:"create"`
-}
-
-type TokenUpdateManyMutationInput struct {
-	Type *TokenType `json:"type,omitempty"`
-}
-
-type UserCreateInput struct {
-	ID       *string                          `json:"id,omitempty"`
-	Username string                           `json:"username"`
-	Password string                           `json:"password"`
-	Tokens   *TokenCreateManyWithoutUserInput `json:"tokens,omitempty"`
-}
-
-type TokenCreateManyWithoutUserInput struct {
-	Create  []TokenCreateWithoutUserInput `json:"create,omitempty"`
-	Connect []TokenWhereUniqueInput       `json:"connect,omitempty"`
-}
-
-type TokenCreateWithoutUserInput struct {
-	ID   *string   `json:"id,omitempty"`
-	Type TokenType `json:"type"`
-}
-
-type UserUpdateInput struct {
-	Username *string                          `json:"username,omitempty"`
-	Password *string                          `json:"password,omitempty"`
-	Tokens   *TokenUpdateManyWithoutUserInput `json:"tokens,omitempty"`
-}
-
-type TokenUpdateManyWithoutUserInput struct {
-	Create     []TokenCreateWithoutUserInput                `json:"create,omitempty"`
-	Delete     []TokenWhereUniqueInput                      `json:"delete,omitempty"`
-	Connect    []TokenWhereUniqueInput                      `json:"connect,omitempty"`
-	Set        []TokenWhereUniqueInput                      `json:"set,omitempty"`
-	Disconnect []TokenWhereUniqueInput                      `json:"disconnect,omitempty"`
-	Update     []TokenUpdateWithWhereUniqueWithoutUserInput `json:"update,omitempty"`
-	Upsert     []TokenUpsertWithWhereUniqueWithoutUserInput `json:"upsert,omitempty"`
-	DeleteMany []TokenScalarWhereInput                      `json:"deleteMany,omitempty"`
-	UpdateMany []TokenUpdateManyWithWhereNestedInput        `json:"updateMany,omitempty"`
-}
-
-type TokenUpdateWithWhereUniqueWithoutUserInput struct {
-	Where TokenWhereUniqueInput           `json:"where"`
-	Data  TokenUpdateWithoutUserDataInput `json:"data"`
-}
-
-type TokenUpdateWithoutUserDataInput struct {
-	Type *TokenType `json:"type,omitempty"`
-}
-
-type TokenUpsertWithWhereUniqueWithoutUserInput struct {
-	Where  TokenWhereUniqueInput           `json:"where"`
-	Update TokenUpdateWithoutUserDataInput `json:"update"`
-	Create TokenCreateWithoutUserInput     `json:"create"`
-}
-
-type TokenScalarWhereInput struct {
-	ID              *string                 `json:"id,omitempty"`
-	IDNot           *string                 `json:"id_not,omitempty"`
-	IDIn            []string                `json:"id_in,omitempty"`
-	IDNotIn         []string                `json:"id_not_in,omitempty"`
-	IDLt            *string                 `json:"id_lt,omitempty"`
-	IDLte           *string                 `json:"id_lte,omitempty"`
-	IDGt            *string                 `json:"id_gt,omitempty"`
-	IDGte           *string                 `json:"id_gte,omitempty"`
-	IDContains      *string                 `json:"id_contains,omitempty"`
-	IDNotContains   *string                 `json:"id_not_contains,omitempty"`
-	IDStartsWith    *string                 `json:"id_starts_with,omitempty"`
-	IDNotStartsWith *string                 `json:"id_not_starts_with,omitempty"`
-	IDEndsWith      *string                 `json:"id_ends_with,omitempty"`
-	IDNotEndsWith   *string                 `json:"id_not_ends_with,omitempty"`
-	Type            *TokenType              `json:"type,omitempty"`
-	TypeNot         *TokenType              `json:"type_not,omitempty"`
-	TypeIn          []TokenType             `json:"type_in,omitempty"`
-	TypeNotIn       []TokenType             `json:"type_not_in,omitempty"`
-	And             []TokenScalarWhereInput `json:"AND,omitempty"`
-	Or              []TokenScalarWhereInput `json:"OR,omitempty"`
-	Not             []TokenScalarWhereInput `json:"NOT,omitempty"`
-}
-
-type TokenUpdateManyWithWhereNestedInput struct {
-	Where TokenScalarWhereInput    `json:"where"`
-	Data  TokenUpdateManyDataInput `json:"data"`
-}
-
-type TokenUpdateManyDataInput struct {
-	Type *TokenType `json:"type,omitempty"`
 }
 
 type UserUpdateManyMutationInput struct {
 	Username *string `json:"username,omitempty"`
 	Password *string `json:"password,omitempty"`
-}
-
-type TokenSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                       `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                      `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                      `json:"updatedFields_contains_some,omitempty"`
-	Node                       *TokenWhereInput              `json:"node,omitempty"`
-	And                        []TokenSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []TokenSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []TokenSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
 type UserSubscriptionWhereInput struct {
@@ -623,88 +304,8 @@ type UserSubscriptionWhereInput struct {
 	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type TokenExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *TokenExec) User() *UserExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "User"},
-		"user",
-		[]string{"id", "username", "password"})
-
-	return &UserExec{ret}
-}
-
-func (instance TokenExec) Exec(ctx context.Context) (*Token, error) {
-	var v Token
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance TokenExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type TokenExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance TokenExecArray) Exec(ctx context.Context) ([]Token, error) {
-	var v []Token
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type Token struct {
-	ID   string    `json:"id"`
-	Type TokenType `json:"type"`
-}
-
 type UserExec struct {
 	exec *prisma.Exec
-}
-
-type TokensParamsExec struct {
-	Where   *TokenWhereInput
-	OrderBy *TokenOrderByInput
-	Skip    *int32
-	After   *string
-	Before  *string
-	First   *int32
-	Last    *int32
-}
-
-func (instance *UserExec) Tokens(params *TokensParamsExec) *TokenExecArray {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := instance.exec.Client.GetMany(
-		instance.exec,
-		wparams,
-		[3]string{"TokenWhereInput", "TokenOrderByInput", "Token"},
-		"tokens",
-		[]string{"id", "type"})
-
-	return &TokenExecArray{ret}
 }
 
 func (instance UserExec) Exec(ctx context.Context) (*User, error) {
@@ -737,156 +338,6 @@ type User struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
 	Password string `json:"password"`
-}
-
-type TokenConnectionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *TokenConnectionExec) PageInfo() *PageInfoExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *TokenConnectionExec) Edges() *TokenEdgeExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "TokenEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	return &TokenEdgeExec{ret}
-}
-
-func (instance *TokenConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateToken"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return v, err
-}
-
-func (instance TokenConnectionExec) Exec(ctx context.Context) (*TokenConnection, error) {
-	var v TokenConnection
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance TokenConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type TokenConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance TokenConnectionExecArray) Exec(ctx context.Context) ([]TokenConnection, error) {
-	var v []TokenConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type TokenConnection struct {
-}
-
-type PageInfoExec struct {
-	exec *prisma.Exec
-}
-
-func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
-	var v PageInfo
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type PageInfoExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
-	var v []PageInfo
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type PageInfo struct {
-	HasNextPage     bool    `json:"hasNextPage"`
-	HasPreviousPage bool    `json:"hasPreviousPage"`
-	StartCursor     *string `json:"startCursor,omitempty"`
-	EndCursor       *string `json:"endCursor,omitempty"`
-}
-
-type TokenEdgeExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *TokenEdgeExec) Node() *TokenExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "Token"},
-		"node",
-		[]string{"id", "type"})
-
-	return &TokenExec{ret}
-}
-
-func (instance TokenEdgeExec) Exec(ctx context.Context) (*TokenEdge, error) {
-	var v TokenEdge
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance TokenEdgeExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type TokenEdgeExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance TokenEdgeExecArray) Exec(ctx context.Context) ([]TokenEdge, error) {
-	var v []TokenEdge
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type TokenEdge struct {
-	Cursor string `json:"cursor"`
 }
 
 type UserConnectionExec struct {
@@ -957,6 +408,43 @@ func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnect
 type UserConnection struct {
 }
 
+type PageInfoExec struct {
+	exec *prisma.Exec
+}
+
+func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
+	var v PageInfo
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PageInfoExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
+	var v []PageInfo
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type PageInfo struct {
+	HasNextPage     bool    `json:"hasNextPage"`
+	HasPreviousPage bool    `json:"hasPreviousPage"`
+	StartCursor     *string `json:"startCursor,omitempty"`
+	EndCursor       *string `json:"endCursor,omitempty"`
+}
+
 type UserEdgeExec struct {
 	exec *prisma.Exec
 }
@@ -1000,98 +488,6 @@ func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) 
 
 type UserEdge struct {
 	Cursor string `json:"cursor"`
-}
-
-type TokenSubscriptionPayloadExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *TokenSubscriptionPayloadExec) Node() *TokenExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "Token"},
-		"node",
-		[]string{"id", "type"})
-
-	return &TokenExec{ret}
-}
-
-func (instance *TokenSubscriptionPayloadExec) PreviousValues() *TokenPreviousValuesExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "TokenPreviousValues"},
-		"previousValues",
-		[]string{"id", "type"})
-
-	return &TokenPreviousValuesExec{ret}
-}
-
-func (instance TokenSubscriptionPayloadExec) Exec(ctx context.Context) (*TokenSubscriptionPayload, error) {
-	var v TokenSubscriptionPayload
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance TokenSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type TokenSubscriptionPayloadExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance TokenSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]TokenSubscriptionPayload, error) {
-	var v []TokenSubscriptionPayload
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type TokenSubscriptionPayload struct {
-	Mutation      MutationType `json:"mutation"`
-	UpdatedFields []string     `json:"updatedFields,omitempty"`
-}
-
-type TokenPreviousValuesExec struct {
-	exec *prisma.Exec
-}
-
-func (instance TokenPreviousValuesExec) Exec(ctx context.Context) (*TokenPreviousValues, error) {
-	var v TokenPreviousValues
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance TokenPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type TokenPreviousValuesExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance TokenPreviousValuesExecArray) Exec(ctx context.Context) ([]TokenPreviousValues, error) {
-	var v []TokenPreviousValues
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type TokenPreviousValues struct {
-	ID   string    `json:"id"`
-	Type TokenType `json:"type"`
 }
 
 type UserSubscriptionPayloadExec struct {

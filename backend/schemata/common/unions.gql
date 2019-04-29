@@ -1,2 +1,2 @@
-union UserAndError = User | ErrorList
-union TokenAndError = Token | ErrorList
+union UserAndStatus = User | Status
+union SessionAndStatus = Session | Status

@@ -1,0 +1,9 @@
+type Error {
+  field: String!
+  messages: [String!]
+}
+
+type Status {
+  ok: Boolean!
+  errors: [Error!]
+}

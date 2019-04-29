@@ -1,10 +1,7 @@
 type PubM {
-  login (username: ID!, password: String!): TokenAndError!
+  login (username: ID!, password: String!): SessionAndStatus!
   signup (
     username: ID!,
     password: String!,
-    email: String!,
-    firstName: String,
-    lastName: String
-  ): UserAndError
+  ): UserAndStatus
 }

@@ -4,12 +4,16 @@
 # for detailed .gqlgen.yml documentation.
 
 schema:
+  - ../schemata/generated.graphql
   - ../schemata/common/*.gql
   - ../schemata/prv/*.gql
 exec:
   filename: generated.go
 model:
   filename: models_gen.go
+models:
+  User:
+    model: github.com/hiroaki-yamamoto/go-gql-sample/backend/prisma.User
 resolver:
   filename: resolver.go
   type: Resolver

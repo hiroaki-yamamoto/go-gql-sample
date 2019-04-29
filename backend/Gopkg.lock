@@ -28,6 +28,14 @@
   version = "v1.0.1"
 
 [[projects]]
+  digest = "1:76dc72490af7174349349838f2fe118996381b31ea83243812a97e5a0fd5ed55"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
   digest = "1:cb07c3f044a051a6e3c984dc6f09ba5cb7d51d74fb9a0f15db294561c98740f8"
   name = "github.com/gbrlsnchs/jwt"
   packages = ["."]
@@ -66,6 +74,17 @@
   version = "v0.5.0"
 
 [[projects]]
+  digest = "1:3c879cf2c466fa82d9edda27c465380a108aa1584a1bd98e1033b789759200f8"
+  name = "github.com/hiroaki-yamamoto/gauth"
+  packages = [
+    "core",
+    "middleware",
+  ]
+  pruneopts = "UT"
+  revision = "0d7a9fc2b6abd566c4e73300f68a7128b2e6443f"
+  version = "0.0.1"
+
+[[projects]]
   digest = "1:57072e5ce133ed6023e6ff49d9f19dcfb09f0fc8da693b1a8ac2eaa038ac858f"
   name = "github.com/jinzhu/gorm"
   packages = [
@@ -85,6 +104,14 @@
   revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
+  digest = "1:d86c8eb7189141c0e902fd8dcf6e79b8feea523978018e20f2ac794626ad0f63"
+  name = "github.com/machinebox/graphql"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "05b17f3157491bbfa5d6fc2006443a272d960d15"
+  version = "v0.2.2"
+
+[[projects]]
   digest = "1:4a49346ca45376a2bba679ca0e83bec949d780d4e927931317904bad482943ec"
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
@@ -93,12 +120,28 @@
   version = "v1.10.0"
 
 [[projects]]
+  digest = "1:53bc4cd4914cd7cd52139990d5170d6dc99067ae31c56530621b18b35fc30318"
+  name = "github.com/mitchellh/mapstructure"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3536a929edddb9a5b34bd6861dc4a9647cb459fe"
+  version = "v1.1.2"
+
+[[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
   name = "github.com/pkg/errors"
   packages = ["."]
   pruneopts = "UT"
   revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
   version = "v0.8.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:4235eec60f6dc693d4b438fb427a7e8783d197e056a586c07960213c4fd3120d"
+  name = "github.com/prisma/prisma-client-lib-go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "68a1f9908416aebb5bbb0bc3cdec3321d74cb7af"
 
 [[projects]]
   digest = "1:b24d38b282bacf9791408a080f606370efa3d364e4b5fd9ba0f7b87786d3b679"
@@ -185,8 +228,12 @@
     "github.com/gbrlsnchs/jwt",
     "github.com/go-chi/chi",
     "github.com/go-chi/chi/middleware",
+    "github.com/hiroaki-yamamoto/gauth/core",
+    "github.com/hiroaki-yamamoto/gauth/middleware",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/sqlite",
+    "github.com/machinebox/graphql",
+    "github.com/prisma/prisma-client-lib-go",
     "github.com/vektah/gqlparser",
     "github.com/vektah/gqlparser/ast",
     "golang.org/x/crypto/argon2",
