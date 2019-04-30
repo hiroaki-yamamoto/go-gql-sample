@@ -216,21 +216,17 @@ func (e MutationType) MarshalGQL(w io.Writer) {
 type UserOrderByInput string
 
 const (
-	UserOrderByInputIdAsc         UserOrderByInput = "id_ASC"
-	UserOrderByInputIdDesc        UserOrderByInput = "id_DESC"
-	UserOrderByInputUsernameAsc   UserOrderByInput = "username_ASC"
-	UserOrderByInputUsernameDesc  UserOrderByInput = "username_DESC"
-	UserOrderByInputPasswordAsc   UserOrderByInput = "password_ASC"
-	UserOrderByInputPasswordDesc  UserOrderByInput = "password_DESC"
-	UserOrderByInputCreatedAtAsc  UserOrderByInput = "createdAt_ASC"
-	UserOrderByInputCreatedAtDesc UserOrderByInput = "createdAt_DESC"
-	UserOrderByInputUpdatedAtAsc  UserOrderByInput = "updatedAt_ASC"
-	UserOrderByInputUpdatedAtDesc UserOrderByInput = "updatedAt_DESC"
+	UserOrderByInputIdAsc        UserOrderByInput = "id_ASC"
+	UserOrderByInputIdDesc       UserOrderByInput = "id_DESC"
+	UserOrderByInputUsernameAsc  UserOrderByInput = "username_ASC"
+	UserOrderByInputUsernameDesc UserOrderByInput = "username_DESC"
+	UserOrderByInputPasswordAsc  UserOrderByInput = "password_ASC"
+	UserOrderByInputPasswordDesc UserOrderByInput = "password_DESC"
 )
 
 func (e UserOrderByInput) IsValid() bool {
 	switch e {
-	case UserOrderByInputIdAsc, UserOrderByInputIdDesc, UserOrderByInputUsernameAsc, UserOrderByInputUsernameDesc, UserOrderByInputPasswordAsc, UserOrderByInputPasswordDesc, UserOrderByInputCreatedAtAsc, UserOrderByInputCreatedAtDesc, UserOrderByInputUpdatedAtAsc, UserOrderByInputUpdatedAtDesc:
+	case UserOrderByInputIdAsc, UserOrderByInputIdDesc, UserOrderByInputUsernameAsc, UserOrderByInputUsernameDesc, UserOrderByInputPasswordAsc, UserOrderByInputPasswordDesc:
 		return true
 	}
 	return false

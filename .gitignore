@@ -16,3 +16,5 @@ vendor
 
 # Omit database data
 *.db
+
+backend/backend

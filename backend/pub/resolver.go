@@ -41,7 +41,7 @@ func (r *pubMResolver) Login(
 	username string,
 	password string,
 ) (SessionAndStatus, error) {
-	if gauthMid.GetUser(ctx) == nil {
+	if gauthMid.GetUser(ctx) != nil {
 		return nil, errors.New("You are already logged in")
 	}
 	pwHash := hash.Argon2(password, username)

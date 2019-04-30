@@ -283,7 +283,7 @@ func field_PubM_login_args(rawArgs map[string]interface{}) (map[string]interface
 	var arg0 string
 	if tmp, ok := rawArgs["username"]; ok {
 		var err error
-		arg0, err = graphql.UnmarshalID(tmp)
+		arg0, err = graphql.UnmarshalString(tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -307,7 +307,7 @@ func field_PubM_signup_args(rawArgs map[string]interface{}) (map[string]interfac
 	var arg0 string
 	if tmp, ok := rawArgs["username"]; ok {
 		var err error
-		arg0, err = graphql.UnmarshalID(tmp)
+		arg0, err = graphql.UnmarshalString(tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5450,10 +5450,6 @@ enum UserOrderByInput {
   username_DESC
   password_ASC
   password_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type UserPreviousValues {
@@ -5544,9 +5540,9 @@ input UserWhereUniqueInput {
 }
 `},
 	&ast.Source{Name: "../schemata/pub/mut.gql", Input: `type PubM {
-  login (username: ID!, password: String!): SessionAndStatus!
+  login (username: String!, password: String!): SessionAndStatus!
   signup (
-    username: ID!,
+    username: String!,
     password: String!,
   ): UserAndStatus
 }
