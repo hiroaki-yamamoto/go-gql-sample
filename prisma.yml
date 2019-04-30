@@ -1,5 +1,6 @@
 endpoint: http://prisma:4466
-datamodel: datamodel.prisma
+datamodel:
+  - models/user.prisma
 generate:
   - generator: go-client
     output: ./backend/prisma
