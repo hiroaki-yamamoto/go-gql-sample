@@ -10,14 +10,10 @@ services:
       POSTGRES_PASSWORD: go-sample
       POSTGRES_USER: go-sample
       POSTGRES_DB: go-sample
-    command:
-      - postgres
-      - -cfsync=off
-      - -cfull_page_writes=off
-      - -csynchronous_commit=off
-      - -crandom_page_cost=1.1
   prisma:
-    image: prismagraphql/prisma:1.31
+    build:  # Current prisma docker image has wrong shell script & command.
+      context: ./
+      dockerfile: prismasvr.dockerfile
     restart: always
     depends_on:
       - db
@@ -34,6 +30,19 @@ services:
             port: 5432
             user: go-sample
             password: go-sample
+  prismacli:
+    build:
+      context: ./
+      dockerfile: prismacli.dockerfile
+    command:
+      - prisma
+      - deploy
+    environment:
+      PRISMA_MANAGEMENT_API_SECRET: "testSecret"
+    volumes:
+      - .:/app
+    depends_on:
+      - prisma
   backend:
     build:
       context: ./

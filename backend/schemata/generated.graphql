@@ -75,10 +75,6 @@ enum UserOrderByInput {
   username_DESC
   password_ASC
   password_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type UserPreviousValues {
