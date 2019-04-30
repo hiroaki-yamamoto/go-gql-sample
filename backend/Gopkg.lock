@@ -85,39 +85,12 @@
   version = "0.0.1"
 
 [[projects]]
-  digest = "1:57072e5ce133ed6023e6ff49d9f19dcfb09f0fc8da693b1a8ac2eaa038ac858f"
-  name = "github.com/jinzhu/gorm"
-  packages = [
-    ".",
-    "dialects/sqlite",
-  ]
-  pruneopts = "UT"
-  revision = "472c70caa40267cb89fd8facb07fe6454b578626"
-  version = "v1.9.2"
-
-[[projects]]
-  branch = "master"
-  digest = "1:fd97437fbb6b7dce04132cf06775bd258cce305c44add58eb55ca86c6c325160"
-  name = "github.com/jinzhu/inflection"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "04140366298a54a039076d798123ffa108fff46c"
-
-[[projects]]
   digest = "1:d86c8eb7189141c0e902fd8dcf6e79b8feea523978018e20f2ac794626ad0f63"
   name = "github.com/machinebox/graphql"
   packages = ["."]
   pruneopts = "UT"
   revision = "05b17f3157491bbfa5d6fc2006443a272d960d15"
   version = "v0.2.2"
-
-[[projects]]
-  digest = "1:4a49346ca45376a2bba679ca0e83bec949d780d4e927931317904bad482943ec"
-  name = "github.com/mattn/go-sqlite3"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "c7c4067b79cc51e6dfdcef5c702e74b1e0fa7c75"
-  version = "v1.10.0"
 
 [[projects]]
   digest = "1:53bc4cd4914cd7cd52139990d5170d6dc99067ae31c56530621b18b35fc30318"
@@ -230,8 +203,6 @@
     "github.com/go-chi/chi/middleware",
     "github.com/hiroaki-yamamoto/gauth/core",
     "github.com/hiroaki-yamamoto/gauth/middleware",
-    "github.com/jinzhu/gorm",
-    "github.com/jinzhu/gorm/dialects/sqlite",
     "github.com/machinebox/graphql",
     "github.com/prisma/prisma-client-lib-go",
     "github.com/vektah/gqlparser",
