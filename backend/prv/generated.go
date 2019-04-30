@@ -33,7 +33,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
-	Mutation() MutationResolver
+	PrvM() PrvMResolver
 	PrvQuery() PrvQueryResolver
 	Subscription() SubscriptionResolver
 }
@@ -69,6 +69,10 @@ type ComplexityRoot struct {
 		HasPreviousPage func(childComplexity int) int
 		StartCursor     func(childComplexity int) int
 		EndCursor       func(childComplexity int) int
+	}
+
+	PrvM struct {
+		Logout func(childComplexity int) int
 	}
 
 	PrvQuery struct {
@@ -126,13 +130,8 @@ type ComplexityRoot struct {
 	}
 }
 
-type MutationResolver interface {
-	CreateUser(ctx context.Context, data UserCreateInput) (prisma.User, error)
-	UpdateUser(ctx context.Context, data UserUpdateInput, where UserWhereUniqueInput) (*prisma.User, error)
-	UpdateManyUsers(ctx context.Context, data UserUpdateManyMutationInput, where *UserWhereInput) (BatchPayload, error)
-	UpsertUser(ctx context.Context, where UserWhereUniqueInput, create UserCreateInput, update UserUpdateInput) (prisma.User, error)
-	DeleteUser(ctx context.Context, where UserWhereUniqueInput) (*prisma.User, error)
-	DeleteManyUsers(ctx context.Context, where *UserWhereInput) (BatchPayload, error)
+type PrvMResolver interface {
+	Logout(ctx context.Context) (Status, error)
 }
 type PrvQueryResolver interface {
 	Me(ctx context.Context) (prisma.User, error)
@@ -721,6 +720,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PageInfo.EndCursor(childComplexity), true
 
+	case "PrvM.logout":
+		if e.complexity.PrvM.Logout == nil {
+			break
+		}
+
+		return e.complexity.PrvM.Logout(childComplexity), true
+
 	case "PrvQuery.me":
 		if e.complexity.PrvQuery.Me == nil {
 			break
@@ -938,7 +944,7 @@ func (e *executableSchema) Mutation(ctx context.Context, op *ast.OperationDefini
 	ec := executionContext{graphql.GetRequestContext(ctx), e}
 
 	buf := ec.RequestMiddleware(ctx, func(ctx context.Context) []byte {
-		data := ec._Mutation(ctx, op.SelectionSet)
+		data := ec._PrvM(ctx, op.SelectionSet)
 		var buf bytes.Buffer
 		data.MarshalGQL(&buf)
 		return buf.Bytes()
@@ -1198,12 +1204,8 @@ func (ec *executionContext) _Error_messages(ctx context.Context, field graphql.C
 var mutationImplementors = []string{"Mutation"}
 
 // nolint: gocyclo, errcheck, gas, goconst
-func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
+func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet, obj *Mutation) graphql.Marshaler {
 	fields := graphql.CollectFields(ctx, sel, mutationImplementors)
-
-	ctx = graphql.WithResolverContext(ctx, &graphql.ResolverContext{
-		Object: "Mutation",
-	})
 
 	out := graphql.NewOrderedMap(len(fields))
 	invalid := false
@@ -1214,26 +1216,26 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
 		case "createUser":
-			out.Values[i] = ec._Mutation_createUser(ctx, field)
+			out.Values[i] = ec._Mutation_createUser(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
 		case "updateUser":
-			out.Values[i] = ec._Mutation_updateUser(ctx, field)
+			out.Values[i] = ec._Mutation_updateUser(ctx, field, obj)
 		case "updateManyUsers":
-			out.Values[i] = ec._Mutation_updateManyUsers(ctx, field)
+			out.Values[i] = ec._Mutation_updateManyUsers(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
 		case "upsertUser":
-			out.Values[i] = ec._Mutation_upsertUser(ctx, field)
+			out.Values[i] = ec._Mutation_upsertUser(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
 		case "deleteUser":
-			out.Values[i] = ec._Mutation_deleteUser(ctx, field)
+			out.Values[i] = ec._Mutation_deleteUser(ctx, field, obj)
 		case "deleteManyUsers":
-			out.Values[i] = ec._Mutation_deleteManyUsers(ctx, field)
+			out.Values[i] = ec._Mutation_deleteManyUsers(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
@@ -1249,7 +1251,7 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField, obj *Mutation) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rawArgs := field.ArgumentMap(ec.Variables)
@@ -1265,9 +1267,9 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateUser(rctx, args["data"].(UserCreateInput))
+		return obj.CreateUser, nil
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -1283,7 +1285,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field graphql.CollectedField, obj *Mutation) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rawArgs := field.ArgumentMap(ec.Variables)
@@ -1299,9 +1301,9 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateUser(rctx, args["data"].(UserUpdateInput), args["where"].(UserWhereUniqueInput))
+		return obj.UpdateUser, nil
 	})
 	if resTmp == nil {
 		return graphql.Null
@@ -1318,7 +1320,7 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Mutation_updateManyUsers(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+func (ec *executionContext) _Mutation_updateManyUsers(ctx context.Context, field graphql.CollectedField, obj *Mutation) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rawArgs := field.ArgumentMap(ec.Variables)
@@ -1334,9 +1336,9 @@ func (ec *executionContext) _Mutation_updateManyUsers(ctx context.Context, field
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateManyUsers(rctx, args["data"].(UserUpdateManyMutationInput), args["where"].(*UserWhereInput))
+		return obj.UpdateManyUsers, nil
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -1352,7 +1354,7 @@ func (ec *executionContext) _Mutation_updateManyUsers(ctx context.Context, field
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Mutation_upsertUser(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+func (ec *executionContext) _Mutation_upsertUser(ctx context.Context, field graphql.CollectedField, obj *Mutation) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rawArgs := field.ArgumentMap(ec.Variables)
@@ -1368,9 +1370,9 @@ func (ec *executionContext) _Mutation_upsertUser(ctx context.Context, field grap
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpsertUser(rctx, args["where"].(UserWhereUniqueInput), args["create"].(UserCreateInput), args["update"].(UserUpdateInput))
+		return obj.UpsertUser, nil
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -1386,7 +1388,7 @@ func (ec *executionContext) _Mutation_upsertUser(ctx context.Context, field grap
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field graphql.CollectedField, obj *Mutation) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rawArgs := field.ArgumentMap(ec.Variables)
@@ -1402,9 +1404,9 @@ func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field grap
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteUser(rctx, args["where"].(UserWhereUniqueInput))
+		return obj.DeleteUser, nil
 	})
 	if resTmp == nil {
 		return graphql.Null
@@ -1421,7 +1423,7 @@ func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field grap
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Mutation_deleteManyUsers(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+func (ec *executionContext) _Mutation_deleteManyUsers(ctx context.Context, field graphql.CollectedField, obj *Mutation) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rawArgs := field.ArgumentMap(ec.Variables)
@@ -1437,9 +1439,9 @@ func (ec *executionContext) _Mutation_deleteManyUsers(ctx context.Context, field
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteManyUsers(rctx, args["where"].(*UserWhereInput))
+		return obj.DeleteManyUsers, nil
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -1601,6 +1603,68 @@ func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graph
 		return graphql.Null
 	}
 	return graphql.MarshalString(*res)
+}
+
+var prvMImplementors = []string{"PrvM"}
+
+// nolint: gocyclo, errcheck, gas, goconst
+func (ec *executionContext) _PrvM(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
+	fields := graphql.CollectFields(ctx, sel, prvMImplementors)
+
+	ctx = graphql.WithResolverContext(ctx, &graphql.ResolverContext{
+		Object: "PrvM",
+	})
+
+	out := graphql.NewOrderedMap(len(fields))
+	invalid := false
+	for i, field := range fields {
+		out.Keys[i] = field.Alias
+
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PrvM")
+		case "logout":
+			out.Values[i] = ec._PrvM_logout(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+
+	if invalid {
+		return graphql.Null
+	}
+	return out
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _PrvM_logout(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "PrvM",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.PrvM().Logout(rctx)
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(Status)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	return ec._Status(ctx, field.Selections, &res)
 }
 
 var prvQueryImplementors = []string{"PrvQuery"}
@@ -5268,10 +5332,6 @@ enum UserOrderByInput {
   username_DESC
   password_ASC
   password_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type UserPreviousValues {
@@ -5364,9 +5424,13 @@ input UserWhereUniqueInput {
 	&ast.Source{Name: "../schemata/prv/query.gql", Input: `type PrvQuery {
   me: User!
 }
+type PrvM {
+  logout: Status!
+}
 `},
 	&ast.Source{Name: "../schemata/prv/schema.gql", Input: `schema {
   query: PrvQuery
+  mutation: PrvM
 }
 `},
 )

@@ -83,11 +83,11 @@ func (r *pubMResolver) Signup(
 type pubQResolver struct{ *Resolver }
 
 func (r *pubQResolver) Country(ctx context.Context) ([]*string, error) {
-	panic("not implemented")
+	return nil, errors.New("not implemented")
 }
 
 type subscriptionResolver struct{ *Resolver }
 
 func (r *subscriptionResolver) User(ctx context.Context, where *UserSubscriptionWhereInput) (<-chan *UserSubscriptionPayload, error) {
-	panic("not implemented")
+	return nil, errors.New("not implemented")
 }

@@ -1,3 +1,4 @@
 schema {
   query: PrvQuery
+  mutation: PrvM
 }

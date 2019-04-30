@@ -2,53 +2,51 @@ package prv
 
 import (
 	"context"
+	"errors"
 
+	gauth "github.com/hiroaki-yamamoto/gauth/core"
+	gauthMid "github.com/hiroaki-yamamoto/gauth/middleware"
 	"github.com/hiroaki-yamamoto/go-gql-sample/backend/prisma"
 )
 
+// Resolver is a resolver to resolve private api.
 type Resolver struct {
-	Db *prisma.Client
+	Db      *prisma.Client
+	TokConf *gauth.Config
 }
 
-func (r *Resolver) Mutation() MutationResolver {
-	return &mutationResolver{r}
+// PrvM solves private-mutation.
+func (r *Resolver) PrvM() PrvMResolver {
+	return &prvMResolver{r}
 }
+
+// PrvQuery solves private-query.
 func (r *Resolver) PrvQuery() PrvQueryResolver {
 	return &prvQueryResolver{r}
 }
+
+// Subscription solves subscription-query.
 func (r *Resolver) Subscription() SubscriptionResolver {
 	return &subscriptionResolver{r}
 }
 
-type mutationResolver struct{ *Resolver }
+type prvMResolver struct{ *Resolver }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, data UserCreateInput) (prisma.User, error) {
-	panic("not implemented")
-}
-func (r *mutationResolver) UpdateUser(ctx context.Context, data UserUpdateInput, where UserWhereUniqueInput) (*prisma.User, error) {
-	panic("not implemented")
-}
-func (r *mutationResolver) UpdateManyUsers(ctx context.Context, data UserUpdateManyMutationInput, where *UserWhereInput) (BatchPayload, error) {
-	panic("not implemented")
-}
-func (r *mutationResolver) UpsertUser(ctx context.Context, where UserWhereUniqueInput, create UserCreateInput, update UserUpdateInput) (prisma.User, error) {
-	panic("not implemented")
-}
-func (r *mutationResolver) DeleteUser(ctx context.Context, where UserWhereUniqueInput) (*prisma.User, error) {
-	panic("not implemented")
-}
-func (r *mutationResolver) DeleteManyUsers(ctx context.Context, where *UserWhereInput) (BatchPayload, error) {
-	panic("not implemented")
+func (r *prvMResolver) Logout(ctx context.Context) (Status, error) {
+	return Status{Ok: true}, nil
 }
 
 type prvQueryResolver struct{ *Resolver }
 
 func (r *prvQueryResolver) Me(ctx context.Context) (prisma.User, error) {
-	panic("not implemented")
+	user := gauthMid.GetUser(ctx).(*prisma.User)
+	// Want omitempty, but prisma.User is auto-generated model... :()
+	user.Password = ""
+	return *user, nil
 }
 
 type subscriptionResolver struct{ *Resolver }
 
 func (r *subscriptionResolver) User(ctx context.Context, where *UserSubscriptionWhereInput) (<-chan *UserSubscriptionPayload, error) {
-	panic("not implemented")
+	return nil, errors.New("not implemented")
 }

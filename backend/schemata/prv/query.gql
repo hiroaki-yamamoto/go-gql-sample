@@ -1,3 +1,6 @@
 type PrvQuery {
   me: User!
 }
+type PrvM {
+  logout: Status!
+}
