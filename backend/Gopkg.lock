@@ -20,12 +20,12 @@
   version = "v0.7.2"
 
 [[projects]]
-  digest = "1:cc306cae16c310ca360eaee3e563109e251832a3f6a13b26bf39cc6a43c7c9f6"
+  digest = "1:786e862ec180708b60ee670723e3edd969fd4309e7b1c315cd7de058ac62a011"
   name = "github.com/agnivade/levenshtein"
   packages = ["."]
   pruneopts = "UT"
-  revision = "834b435c3df04fba060c8d74a40d849ab2c4a090"
-  version = "v1.0.1"
+  revision = "51b298ff305e72cfd29166dccc3f9878e82f9fdc"
+  version = "v1.0.2"
 
 [[projects]]
   digest = "1:76dc72490af7174349349838f2fe118996381b31ea83243812a97e5a0fd5ed55"
@@ -44,15 +44,15 @@
   version = "v2.0.0"
 
 [[projects]]
-  digest = "1:631757aef84dd471e4ba8242ac6affcccfc2c4c6d9c8c45e47b0d8fe8fd82de1"
+  digest = "1:58c033da727ebd5a6769209e479cac9a6e4dab53c879631af3d8161423099d57"
   name = "github.com/go-chi/chi"
   packages = [
     ".",
     "middleware",
   ]
   pruneopts = "UT"
-  revision = "1a6bb108ccf279c8dac6f9bad857d773b4f9b421"
-  version = "v4.0.1"
+  revision = "da24bba8dcd4021cafac38724bf10dccc97c3e36"
+  version = "v4.0.2"
 
 [[projects]]
   digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
@@ -63,26 +63,28 @@
   version = "v1.4.0"
 
 [[projects]]
-  digest = "1:8ec8d88c248041a6df5f6574b87bc00e7e0b493881dad2e7ef47b11dc69093b5"
+  digest = "1:d15ee511aa0f56baacc1eb4c6b922fa1c03b38413b6be18166b996d82a0156ea"
   name = "github.com/hashicorp/golang-lru"
   packages = [
     ".",
     "simplelru",
   ]
   pruneopts = "UT"
-  revision = "20f1fb78b0740ba8c3cb143a61e86ba5c8669768"
-  version = "v0.5.0"
+  revision = "7087cb70de9f7a8bc0a10c375cb0d2280a8edf9c"
+  version = "v0.5.1"
 
 [[projects]]
-  digest = "1:3c879cf2c466fa82d9edda27c465380a108aa1584a1bd98e1033b789759200f8"
+  digest = "1:951350547093265c4f807db109905faccef17077d994b87d2c418c49b159756c"
   name = "github.com/hiroaki-yamamoto/gauth"
   packages = [
+    "config",
     "core",
     "middleware",
+    "models",
   ]
   pruneopts = "UT"
-  revision = "0d7a9fc2b6abd566c4e73300f68a7128b2e6443f"
-  version = "0.0.1"
+  revision = "4b5de151cd7fefe529a7e26543ca07d00f8954be"
+  version = "0.0.2"
 
 [[projects]]
   digest = "1:d86c8eb7189141c0e902fd8dcf6e79b8feea523978018e20f2ac794626ad0f63"
@@ -125,7 +127,7 @@
   version = "v1.20.0"
 
 [[projects]]
-  digest = "1:df1733adbff537430f4b3179ee1c22cb5fb7160913b9f1e7858afd6348499878"
+  digest = "1:b4e8aaca88f799355f4ac560bce4293fb85ff21003dd0d5741ca503f7a788e91"
   name = "github.com/vektah/gqlparser"
   packages = [
     ".",
@@ -137,31 +139,34 @@
     "validator/rules",
   ]
   pruneopts = "UT"
-  revision = "b850e94a0bf8eab2820054638d96def671b7ae4e"
-  version = "v1.1.0"
+  revision = "05741cdb0871330d8bc980d4afd21ab34eceee83"
+  version = "v1.1.2"
 
 [[projects]]
   branch = "master"
-  digest = "1:d4df67cef5e20015feb306724296fde6155f2451e87ec3152d8d4963bf841c06"
+  digest = "1:97a47f6b7c9bc870df03bbaa5b6e9c81e6a9afb27f625b825bc6f48143585e88"
   name = "golang.org/x/crypto"
   packages = [
     "argon2",
     "blake2b",
   ]
   pruneopts = "UT"
-  revision = "7f87c0fbb88b590338857bcb720678c2583d4dea"
+  revision = "e1dfcc566284e143ba8f9afbb3fa563f2a0d212b"
 
 [[projects]]
   branch = "master"
-  digest = "1:f3f79696c064bff17314b6180110357383f81d4d633c5e1ae2f7e0b461cbb779"
+  digest = "1:a9575413505e72147bbf32e993b40d0bad9ee2837d4c87f30da3d2caf1c75c09"
   name = "golang.org/x/sys"
-  packages = ["cpu"]
+  packages = [
+    "cpu",
+    "unix",
+  ]
   pruneopts = "UT"
-  revision = "775f8194d0f9e65c46913c7be783d3d95a29333c"
+  revision = "2953c62de483abe29031e197e72d3b7061f65f91"
 
 [[projects]]
   branch = "master"
-  digest = "1:7eee604fd833c4346b8708d184f121dc52d652cc588c18683e09b3f14c83eca4"
+  digest = "1:b0a93dc5abc427a2f5a495f0142ee3d98cf87f8b31ccfec92c0db77684a499df"
   name = "golang.org/x/tools"
   packages = [
     "go/ast/astutil",
@@ -180,7 +185,7 @@
     "internal/semver",
   ]
   pruneopts = "UT"
-  revision = "8dcb7bc8c7fe0a895995c76c721cef79419ac98a"
+  revision = "2d16b83fe98cd1bed9e2ce9fdc86bd438d14aab7"
 
 [[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
