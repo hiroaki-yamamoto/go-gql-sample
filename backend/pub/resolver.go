@@ -3,9 +3,8 @@ package pub
 import (
 	"context"
 	"errors"
-	"time"
 
-	"github.com/gbrlsnchs/jwt"
+	gauthConf "github.com/hiroaki-yamamoto/gauth/config"
 	gauth "github.com/hiroaki-yamamoto/gauth/core"
 	gauthMid "github.com/hiroaki-yamamoto/gauth/middleware"
 
@@ -16,7 +15,7 @@ import (
 // Resolver is a struct for pub-api reolver
 type Resolver struct {
 	Db      *prisma.Client
-	TokConf *gauth.Config
+	TokConf *gauthConf.Config
 }
 
 // PubM indicates a public mutation
@@ -54,15 +53,22 @@ func (r *pubMResolver) Login(
 	if err != nil {
 		return nil, err
 	}
-	now := time.Now().UTC()
-	tok, err := gauth.ComposeToken(&jwt.JWT{
-		Issuer:         r.TokConf.Issuer,
-		Subject:        r.TokConf.Subject,
-		Audience:       r.TokConf.Audience,
-		ExpirationTime: now.Add(2 * time.Hour).Unix(),
-		IssuedAt:       now.Unix(),
-		ID:             users[0].Username,
-	}, r.TokConf.Signer)
+	if len(users) < 1 {
+		return nil, errors.New("Username and / or password are mismatch")
+	}
+	// In the most case, this code is enought to tokenize:
+	tok, err := gauth.ComposeID(users[0].ID, r.TokConf)
+	// However, if you want to use in advanced mode,
+	// ComposeToken is also useful.
+	// now := time.Now().UTC()
+	// tok, err := gauth.ComposeToken(&jwt.JWT{
+	// 	Issuer:         r.TokConf.Issuer,
+	// 	Subject:        r.TokConf.Subject,
+	// 	Audience:       r.TokConf.Audience,
+	// 	ExpirationTime: now.Add(2 * time.Hour).Unix(),
+	// 	IssuedAt:       now.Unix(),
+	// 	ID:             users[0].Username,
+	// }, r.TokConf.Signer)
 	if err != nil {
 		return nil, err
 	}

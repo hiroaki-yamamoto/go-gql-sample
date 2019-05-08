@@ -206,6 +206,7 @@
     "github.com/gbrlsnchs/jwt",
     "github.com/go-chi/chi",
     "github.com/go-chi/chi/middleware",
+    "github.com/hiroaki-yamamoto/gauth/config",
     "github.com/hiroaki-yamamoto/gauth/core",
     "github.com/hiroaki-yamamoto/gauth/middleware",
     "github.com/machinebox/graphql",

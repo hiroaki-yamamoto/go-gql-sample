@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	gauth "github.com/hiroaki-yamamoto/gauth/core"
+	gauthConf "github.com/hiroaki-yamamoto/gauth/config"
 	gauthMid "github.com/hiroaki-yamamoto/gauth/middleware"
 	"github.com/hiroaki-yamamoto/go-gql-sample/backend/prisma"
 )
@@ -12,7 +12,7 @@ import (
 // Resolver is a resolver to resolve private api.
 type Resolver struct {
 	Db      *prisma.Client
-	TokConf *gauth.Config
+	TokConf *gauthConf.Config
 }
 
 // PrvM solves private-mutation.

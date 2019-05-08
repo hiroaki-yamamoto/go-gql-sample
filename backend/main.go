@@ -5,13 +5,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/99designs/gqlgen/handler"
 	"github.com/gbrlsnchs/jwt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 
-	gauth "github.com/hiroaki-yamamoto/gauth/core"
+	gauthConf "github.com/hiroaki-yamamoto/gauth/config"
 	guathMid "github.com/hiroaki-yamamoto/gauth/middleware"
 	"github.com/hiroaki-yamamoto/go-gql-sample/backend/prisma"
 	"github.com/hiroaki-yamamoto/go-gql-sample/backend/prv"
@@ -22,24 +23,26 @@ const defaultPort = "8080"
 
 func findUser(fcon interface{}, username string) (interface{}, error) {
 	con := fcon.(*prisma.Client)
-	return con.User(prisma.UserWhereUniqueInput{Username: &username}).Exec(
+	return con.User(prisma.UserWhereUniqueInput{ID: &username}).Exec(
 		context.TODO(),
 	)
 }
 
 func main() {
 	con := prisma.New(nil)
-	config := gauth.Config{
-		Signer:   jwt.NewHS256("test"),
-		Audience: "Test Audience",
-		Issuer:   "Test Issuer",
-		Subject:  "Test Subject",
+	config, err := gauthConf.New(
+		jwt.NewHS256("test"),
+		"Test Audience", "Test Issuer",
+		"Test Subject", 3600*time.Minute,
+	)
+	if err != nil {
+		log.Fatal(err)
 	}
 	headerMiddleware := guathMid.HeaderMiddleware(
-		"Auth", con, findUser, &config,
+		"Auth", con, findUser, config,
 	)
 	headerRequired := guathMid.HeaderLoginRequired(
-		"Auth", con, findUser, &config,
+		"Auth", con, findUser, config,
 	)
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -55,7 +58,7 @@ func main() {
 	router.Handle("/", handler.Playground("GraphQL playground", "/pub"))
 	router.Handle("/pub", headerMiddleware(
 		handler.GraphQL(pub.NewExecutableSchema(
-			pub.Config{Resolvers: &pub.Resolver{Db: con, TokConf: &config}}),
+			pub.Config{Resolvers: &pub.Resolver{Db: con, TokConf: config}}),
 		),
 	))
 	router.Handle("/prv", headerRequired(
