@@ -15,14 +15,17 @@ It's based on [GQLGen] and [Gorm]. Check there if you want to play this "sandbox
 Go itself is very smart and fast language, and would be a choice to write a
 backend of various services, but I found several things.
 
-* **No Admin Panel**: I'm mainly using Python and Django, and it has Admin Panel
+* ~~**No Admin Panel**: I'm mainly using Python and Django, and it has Admin Panel
     as you can see, and someone **provided** admin panel in Go.
-    Yes, **it is past**. Now, the panel is no longer working...
+    Yes, **it is past**. Now, the panel is no longer working...~~
+    Finally, I decided to use [Prisma]
 * **Needs to implement authentication subsystem manually**: Django has
     authentication subsystem, but I couldn't find good auth frameworks for go.
-* **Weak ORM**: [Gorm] is excellent ORM framework and I like it, however
+    AND **[I made it]**.
+* ~~**Weak ORM**: [Gorm] is excellent ORM framework and I like it, however
     auto-migration feature is not so smart unlike Django. **I think this problem
-    can be solved by writing migration generator.**
+    can be solved by writing migration generator.**~~
+    I decided to use [Prisma]
 * **Where is ResponseWriter!?**: Because there's no auth framework, I wanted to
     implement session with JWT and cookie, however, [GQLGen] provides only
     `context.Context` type in the resolver. Therefore, I couldn't set cookie and
@@ -43,3 +46,5 @@ See: [LICENSE.md](LICENSE.md)
 
 [GQLGen]: https://github.com/99designs/gqlgen
 [Gorm]: https://github.com/jinzhu/gorm
+[Prisma]: https://www.prisma.io/
+[I made it]: https://github.com/hiroaki-yamamoto/gauth
